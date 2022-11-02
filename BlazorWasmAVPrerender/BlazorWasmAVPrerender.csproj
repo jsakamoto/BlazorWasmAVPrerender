@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<RenameDllsTo>dat</RenameDllsTo>
+	<PublishTrimmed>true</PublishTrimmed>
+	<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+	<BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
+	<BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
+	<BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
+	<BlazorWasmPrerenderingMode>WebAssemblyPrerendered</BlazorWasmPrerenderingMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorWasmAntivirusProtection" Version="1.8.5" />
+	<PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
+	<PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>
