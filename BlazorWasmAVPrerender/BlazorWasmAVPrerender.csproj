@@ -4,21 +4,50 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<RenameDllsTo>dat</RenameDllsTo>
-	<PublishTrimmed>true</PublishTrimmed>
-	<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
-	<BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
-	<BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
-	<BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
-	<BlazorWasmPrerenderingMode>WebAssemblyPrerendered</BlazorWasmPrerenderingMode>
+    <RenameDllsTo>dat</RenameDllsTo>
+    <PublishTrimmed>true</PublishTrimmed>
+    <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+    <BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
+    <BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
+    <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
+    <BlazorWasmPrerenderingMode>WebAssemblyPrerendered</BlazorWasmPrerenderingMode>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BlazorWasmAntivirusProtection" Version="1.8.5" />
-	<PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.4" />
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
-	<PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
+    <PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
   </ItemGroup>
+
+  <Target Name="_RecompressBlazorBootJson" AfterTargets="_ChangeDLLFileExtensions">
+
+    <ItemGroup>
+      <_BlazorBootJsonToRecompress Include="$(PublishDir)wwwroot\_framework\blazor.boot.json"></_BlazorBootJsonToRecompress>
+    </ItemGroup>
+
+    <GZipCompress
+        Condition="!Exists('$(PublishDir)wwwroot\_framework\blazor.boot.json.gz')"
+        FilesToCompress="@(_BlazorBootJsonToRecompress)"
+        OutputDirectory="$(PublishDir)wwwroot\_framework\">
+      <Output TaskParameter="CompressedFiles" ItemName="_BlazorBootJsonGZipRecompressed" />
+    </GZipCompress>
+    <Move SourceFiles="@(_BlazorBootJsonGZipRecompressed)" DestinationFiles="$(PublishDir)wwwroot\_framework\blazor.boot.json.gz" />
+
+    <BrotliCompress
+        Condition="!Exists('$(PublishDir)wwwroot\_framework\blazor.boot.json.br')"
+        FilesToCompress="@(_BlazorBootJsonToRecompress)"
+        OutputDirectory="$(PublishDir)wwwroot\_framework\"
+        CompressionLevel="$(_BlazorBrotliCompressionLevel)"
+        SkipIfOutputIsNewer="$(_BlazorWebAssemblyBrotliIncremental)"
+        ToolAssembly="$(_BlazorWebAssemblySdkToolAssembly)"
+        ToolExe="$(_DotNetHostFileName)"
+        ToolPath="$(_DotNetHostDirectory)">
+      <Output TaskParameter="CompressedFiles" ItemName="_BlazorBootJsonBrotliRecompressed" />
+    </BrotliCompress>
+    <Move SourceFiles="@(_BlazorBootJsonBrotliRecompressed)" DestinationFiles="$(PublishDir)wwwroot\_framework\blazor.boot.json.br" />
+
+  </Target>
 
 </Project>
