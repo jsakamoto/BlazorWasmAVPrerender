@@ -21,33 +21,4 @@
 	<PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
   </ItemGroup>
 
-  <Target Name="_RecompressBlazorBootJson" AfterTargets="_ChangeDLLFileExtensions">
-
-    <ItemGroup>
-      <_BlazorBootJsonToRecompress Include="$(PublishDir)wwwroot\_framework\blazor.boot.json"></_BlazorBootJsonToRecompress>
-    </ItemGroup>
-
-    <GZipCompress
-        Condition="!Exists('$(PublishDir)wwwroot\_framework\blazor.boot.json.gz')"
-        FilesToCompress="@(_BlazorBootJsonToRecompress)"
-        OutputDirectory="$(PublishDir)wwwroot\_framework\">
-      <Output TaskParameter="CompressedFiles" ItemName="_BlazorBootJsonGZipRecompressed" />
-    </GZipCompress>
-    <Move SourceFiles="@(_BlazorBootJsonGZipRecompressed)" DestinationFiles="$(PublishDir)wwwroot\_framework\blazor.boot.json.gz" />
-
-    <BrotliCompress
-        Condition="!Exists('$(PublishDir)wwwroot\_framework\blazor.boot.json.br')"
-        FilesToCompress="@(_BlazorBootJsonToRecompress)"
-        OutputDirectory="$(PublishDir)wwwroot\_framework\"
-        CompressionLevel="$(_BlazorBrotliCompressionLevel)"
-        SkipIfOutputIsNewer="$(_BlazorWebAssemblyBrotliIncremental)"
-        ToolAssembly="$(_BlazorWebAssemblySdkToolAssembly)"
-        ToolExe="$(_DotNetHostFileName)"
-        ToolPath="$(_DotNetHostDirectory)">
-      <Output TaskParameter="CompressedFiles" ItemName="_BlazorBootJsonBrotliRecompressed" />
-    </BrotliCompress>
-    <Move SourceFiles="@(_BlazorBootJsonBrotliRecompressed)" DestinationFiles="$(PublishDir)wwwroot\_framework\blazor.boot.json.br" />
-
-  </Target>
-
 </Project>
