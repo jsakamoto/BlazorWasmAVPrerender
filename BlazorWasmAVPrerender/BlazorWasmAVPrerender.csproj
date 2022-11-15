@@ -21,4 +21,12 @@
 	<PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+  	<BlazorWebAssemblyLazyLoad Include="Common.dll" />
+  </ItemGroup>
+
 </Project>

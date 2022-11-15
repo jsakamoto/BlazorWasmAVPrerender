@@ -1,4 +1,9 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+@using System.Reflection;
+@inject IWebAssemblyHostEnvironment Environment
+
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +15,19 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    private List<Assembly> lazyLoadedAssemblies = new();
+    private string assemblyExtension => Environment.IsProduction() ? "dat" : "dll";
+
+    [Inject] private LazyAssemblyLoader AssemblyLoader { get; set; } = default!;
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        if (args.Path.Contains("counter", StringComparison.OrdinalIgnoreCase) && !lazyLoadedAssemblies.Any(x => x.GetName().Name == "Common"))
+        {
+            var assembly = await AssemblyLoader.LoadAssembliesAsync(new[] { $"Common.{assemblyExtension}" });
+            lazyLoadedAssemblies.AddRange(assembly);
+        }
+    }
+}
