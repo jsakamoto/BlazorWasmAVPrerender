@@ -11,10 +11,11 @@
     <BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
     <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
     <BlazorWasmPrerenderingMode>WebAssemblyPrerendered</BlazorWasmPrerenderingMode>
+    <BlazorWasmPrerenderingKeepServer>true</BlazorWasmPrerenderingKeepServer>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorWasmAntivirusProtection" Version="1.9.0" />
+    <PackageReference Include="BlazorWasmAntivirusProtection" Version="2.0.0" />
 	<PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
